@@ -23,7 +23,6 @@ import {post} from '~/helpers/api';
 function App({history}) {
     const [userCount, setUserCount] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [override, setOverride] = useState(false);
 
     useEffect(() => {
         getUserCount();
@@ -47,13 +46,13 @@ function App({history}) {
             <Dashboard>
                 <MenuNav/>
                 <Switch>
-                    <Route path="/home" component={Home}/>
-                    <Route path="/configuration" component={Configuration}/>
-                    <Route path="/addUser" component={AddUser}/>
-                    <Route path="/removeUser" component={RemoveUser}/>
-                    <Route path="/sandbox" component={Sandbox}/>
-                    <Route path="/castsandbox" component={CastSandbox}/>
-                    <Route path="/about" component={About}/>
+                    <Route path="/home" exact component={Home}/>
+                    <Route path="/configuration" exact component={Configuration}/>
+                    <Route path="/addUser" exact component={AddUser}/>
+                    <Route path="/removeUser" exact component={RemoveUser}/>
+                    <Route path="/sandbox" exact component={Sandbox}/>
+                    <Route path="/castsandbox" exact component={CastSandbox}/>
+                    <Route path="/about" exact component={About}/>
                     <Redirect to="/home" />
                 </Switch>
             </Dashboard>
@@ -63,7 +62,7 @@ function App({history}) {
     return (
         <Setup>
             <Switch>
-                <Route path="/setup" component={() => <SetupWiz getUserCount={() => getUserCount()}/>}/>
+                <Route path="/setup" exact component={() => <SetupWiz getUserCount={() => getUserCount()}/>}/>
                 <Redirect to="/setup" />
             </Switch>
         </Setup>

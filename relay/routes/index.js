@@ -10,9 +10,11 @@ const {outputFileStream, isQuietHour, updateResponses} = require('../helpers/ser
 
 const router = express.Router();
 
-router.get('/*', function(req, res) {
+
+router.get('/', function(req, res) {
+  console.log("Get All")
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
-});
+ });
 
 router.post('/assistant', async(req, res) => {
   try {
@@ -66,6 +68,7 @@ router.post('/assistant', async(req, res) => {
       }
     }
 
+
     if(!command) return res.status(400).json({success:  false, error: "No command given"});
     if(broadcast) command = `broadcast ${command}`;
 
@@ -76,6 +79,7 @@ router.post('/assistant', async(req, res) => {
         error: "Quiet Time Enabled - Broadcast command detected"
       });
     }
+
 
     const conversation = await sendTextInput(command, user);
     conversation

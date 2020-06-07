@@ -31,25 +31,20 @@ function AddSecrets({form, next, previous}) {
         fileList,
     };
 
-    function addUser(e){
-        e.preventDefault();
-        form.validateFields(async(err, values) => {
-            if(!err) {
-                try {
-                    if(fileData) {
-                        const response = await post({
-                            name: values.name,
-                            secret: fileData
-                        }, 'addUser');
-                        const win = window.open(response.data.url, '_blank');
-                        win.focus();
-                        return next(values.name);
-                    }
-                } catch (e) {
-                    message.error(e.response.data)
-                }
+    async function addUser(values){
+        try {
+            if(fileData) {
+                const response = await post({
+                    name: values.name,
+                    secret: fileData
+                }, 'addUser');
+                const win = window.open(response.data.url, '_blank');
+                win.focus();
+                return next(values.name);
             }
-        })
+        } catch (e) {
+            message.error(e.response.data)
+        }
     }
 
     return (
@@ -57,17 +52,16 @@ function AddSecrets({form, next, previous}) {
             <Title level={3}>Setting up your account</Title>
             <Paragraph>With your client secrets, you can import them into Assistant Relay below</Paragraph>
 
-            <Form layout="inline" onSubmit={addUser}>
-                <Form.Item label="Users Name">
-                    {form.getFieldDecorator('name', {
-                        rules: [
-                            {
-                                required: true,
-                                message: 'Please input a users name!',
-                                type: 'string',
-                            },
-                        ],
-                    })(<Input />)}
+            <Form layout="inline" onFinish={addUser}>
+                <Form.Item label="Users Name" name="name"
+                           rules={[
+                               {
+                                   required: true,
+                                   message: 'Please input a users name!',
+                                   type: 'string',
+                               },
+                           ]}>
+                    <Input />
                 </Form.Item>
                 <Form.Item>
                     <Upload {...props}>
@@ -93,4 +87,4 @@ function AddSecrets({form, next, previous}) {
     )
 }
 
-export default Form.create()(AddSecrets)
+export default AddSecrets

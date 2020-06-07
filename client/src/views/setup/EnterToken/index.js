@@ -6,39 +6,38 @@ import {withRouter} from 'react-router-dom'
 const { Title, Paragraph } = Typography;
 
 function AddSecrets({form, next, previous, name, done}) {
-    function addUser(e){
-        e.preventDefault();
-        form.validateFields(async(err, values) => {
-            if(!err) {
-                try {
-                    await post({
-                        name: name,
-                        oauthCode: values.oauthCode
-                    }, 'processOAuth');
-                    return done();
-                } catch (e) {
-                    message.error(e.message)
-                }
-            }
-        })
+
+    async function addUser(values){
+        try {
+            await post({
+                name: name,
+                oauthCode: values.oauthCode
+            }, 'processOAuth');
+            return done();
+        } catch (e) {
+            message.error(e.message)
+        }
     }
+
+
 
     return (
         <Styles.Container>
             <Title level={2}>Setting up your accounts</Title>
             <Paragraph>Now that you have the client secrets downloaded, you can import them into Assistant Relay below</Paragraph>
 
-            <Form layout="inline" onSubmit={addUser}>
-                <Form.Item label="Auth Code">
-                    {form.getFieldDecorator('oauthCode', {
-                        rules: [
-                            {
-                                required: true,
-                                message: 'Please input your auth code!',
-                                type: 'string',
-                            },
-                        ],
-                    })(<Input />)}
+            <Form layout="inline" onFinish={addUser}>
+                <Form.Item label="Auth Code" name="oauthCode"
+                           rules={
+                               [
+                                   {
+                                       required: true,
+                                       message: 'Please input your auth code!',
+                                       type: 'string',
+                                   },
+                               ]
+                           }>
+                    <Input />
                 </Form.Item>
 
                 <Styles.Steps>
@@ -57,4 +56,4 @@ function AddSecrets({form, next, previous, name, done}) {
     )
 }
 
-export default withRouter(Form.create()(AddSecrets));
+export default withRouter(AddSecrets);
